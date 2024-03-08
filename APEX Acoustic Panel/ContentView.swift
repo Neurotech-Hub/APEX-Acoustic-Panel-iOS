@@ -1,119 +1,228 @@
+//
+//  ContentView.swift
+//  APEX Acoustic Panel
+//
+//  Created by Matt Gaidica on 3/8/24.
+//
+
 import SwiftUI
+import BLEAppHelpers
 
 struct ContentView: View {
-    @State private var linearValue: Double = Double.random(in: 0...100)
-    @State private var circularValues: [Double] = (0..<5).map { _ in Double.random(in: -5...5)
+    @State private var debug = false
+    @ObservedObject var bluetoothManager = BluetoothManager(
+        serviceUUID: BluetoothDeviceUUIDs.Module.serviceUUID,
+        nodeRxUUID: BluetoothDeviceUUIDs.Module.nodeRxUUID,
+        nodeTxUUID: BluetoothDeviceUUIDs.Module.nodeTxUUID
+    )
+    @ObservedObject var terminalManager = TerminalManager.shared
+    @State private var attackValue: Double = Double.random(in: 0...100)
+    @State private var modemValues: [Double] = (0..<6).map { _ in Double.random(in: -5...5)
     }
     let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     let minZValue: Double = -5
     let maxZValue: Double = 5
     
+    var isSimulator: Bool {
+        #if targetEnvironment(simulator)
+                // Code is running in the Simulator
+                return true
+        #else
+                // Code is running on an actual device
+                return false
+        #endif
+    }
+    
     var body: some View {
         VStack {
-            Divider()
-
-            // Linear gauge with a larger font and size
-            VStack {
-                Text("Attack Meter")
-                    .font(.title)
-                Gauge(value: linearValue, in: 0...100) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text("\(Int(linearValue))%")
-                        .font(.title)
+            HStack {
+                Button(action: handleBluetoothAction) {
+                    Text(bluetoothManager.isConnected ? "Disconnect" : "Connect to Modem")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(bluetoothManager.isConnected ? Color.red : Color.blue)
+                        .cornerRadius(8)
                 }
-                .gaugeStyle(SpeedometerGaugeStyle())
-                .scaleEffect(1)
+                Spacer()
+                Button(action: {
+                    self.debug.toggle() // Toggle the debug state
+                }) {
+                    Text("debug")
+                        .foregroundColor(.gray)
+                }
             }
-            .padding()
+            .padding([.leading,.trailing],40)
+            
+            if bluetoothManager.isConnecting {
+                Text("Connecting...")
+                    .foregroundColor(.gray)
+                    .font(.caption)
+            }
+
+            Divider()
             
             Spacer()
             
-            VStack {
-                Text("Delta Rhythm")
-                Gauge(value: circularValues[0], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[0]))
+            if (bluetoothManager.isConnected || isSimulator || debug) {
+                // Linear gauge with a larger font and size
+                VStack {
+                    Gauge(value: attackValue, in: 0...100) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text("\(Int(attackValue))%")
+                            .font(.title)
+                    }
+                    .gaugeStyle(SpeedometerGaugeStyle())
+                    .scaleEffect(1)
                 }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
-                }
-                .gaugeStyle(.accessoryLinear)
+                .padding()
                 
-                Text("Theta Rhythm")
-                Gauge(value: circularValues[1], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[1]))
-                }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
-                }
-                .gaugeStyle(.accessoryLinear)
+                Spacer()
                 
-                Text("Alpha Rhythm")
-                Gauge(value: circularValues[1], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[1]))
+                VStack {
+                    Text("Delta Rhythm")
+                    Gauge(value: modemValues[0], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[0]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
+                    
+                    Text("Theta Rhythm")
+                    Gauge(value: modemValues[1], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[1]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
+                    
+                    Text("Alpha Rhythm")
+                    Gauge(value: modemValues[2], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[1]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
+                    
+                    Text("Beta Rhythm")
+                    Gauge(value: modemValues[3], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[1]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
+                    
+                    Text("Gamma Rhythm")
+                    Gauge(value: modemValues[4], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[1]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
+                    
+                    Text("Movement")
+                    Gauge(value: modemValues[5], in: -5...5) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        Text(String(format: "%.1f", modemValues[1]))
+                    }
+                    minimumValueLabel: {
+                        Text("\(Int(minZValue))")
+                    } maximumValueLabel: {
+                        Text("\(Int(maxZValue))")
+                    }
+                    .gaugeStyle(.accessoryLinear)
                 }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
+                .padding()
+                .onAppear {
+                    bluetoothManager.onDisconnect = {
+                        resetAllViewVars()
+                    }
+                    bluetoothManager.onNodeTxValueUpdated = { dataString in
+                        parseNode(from: dataString)
+                    }
                 }
-                .gaugeStyle(.accessoryLinear)
-                
-                Text("Beta Rhythm")
-                Gauge(value: circularValues[1], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[1]))
-                }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
-                }
-                .gaugeStyle(.accessoryLinear)
-                
-                Text("Gamma Rhythm")
-                Gauge(value: circularValues[1], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[1]))
-                }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
-                }
-                .gaugeStyle(.accessoryLinear)
-                
-                Text("Movement")
-                Gauge(value: circularValues[1], in: -5...5) {
-                    EmptyView()
-                } currentValueLabel: {
-                    Text(String(format: "%.1f", circularValues[1]))
-                }
-                minimumValueLabel: {
-                    Text("\(Int(minZValue))")
-                } maximumValueLabel: {
-                    Text("\(Int(maxZValue))")
-                }
-                .gaugeStyle(.accessoryLinear)
-    
             }
+            
+            Spacer()
+            
+            // terminal
+            ScrollView {
+                VStack(alignment: .leading, spacing: 5) {
+                    ForEach(terminalManager.receivedMessages, id: \.self) { message in
+                        Text(message)
+                            .foregroundColor(Color.green)
+                            .font(.system(size: 11, design: .monospaced))
+                            .frame(maxWidth: .infinity, alignment: .leading) // Align text to the left
+                    }
+                }
+                .padding(5)
+            }
+            .frame(maxWidth: .infinity, maxHeight: 100) // Full width and fixed height
+            .background(Color.black)
+            .cornerRadius(5)
             .padding()
         }
         .onReceive(timer) { _ in
-            linearValue = Double.random(in: 0...100)
-            circularValues = (0..<5).map { _ in Double.random(in: -5...5) }
+            if (debug || isSimulator) {
+                attackValue = Double.random(in: 0...100)
+                modemValues = (0..<6).map { _ in Double.random(in: -5...5) }
+            }
+        }
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    func resetAllViewVars() {
+    }
+    
+    func parseNode(from dataString: String) {
+        let values = dataString.split(separator: ",")
+        for (index, value) in values.enumerated() {
+            if let doubleValue = Double(value) {
+                if index < modemValues.count {
+                    modemValues[index] = doubleValue
+                }
+            }
+        }
+
+        let modemValuesString = modemValues.map { String($0) }.joined(separator: ", ")
+        terminalManager.addMessage(modemValuesString)
+        
+        let sum = modemValues[4] + modemValues[5]
+        attackValue = sum * 20
+        attackValue = max(0, min(attackValue, 100)) // Ensure attackValue is between 0 and 100
+    }
+    
+    func handleBluetoothAction() {
+        if bluetoothManager.isConnected || bluetoothManager.isConnecting {
+            bluetoothManager.disconnect()
+        } else {
+            bluetoothManager.startScanning()
         }
     }
 }
@@ -177,16 +286,14 @@ struct SpeedometerGaugeStyle: GaugeStyle {
             
             VStack {
                 configuration.currentValueLabel
-                    .font(.system(size: 80, weight: .bold, design: .rounded))
+                    .font(.system(size: 200, weight: .bold, design: .rounded))
                     .foregroundColor(.gray)
-                Text("KILL")
-                    .font(.system(.body, design: .rounded))
-                    .bold()
+                Text("Attack Meter")
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundColor(.gray)
             }
             
         }
-//        .frame(width: 300, height: 300)
     }
     
 }
@@ -200,10 +307,9 @@ struct CustomGaugeView: View {
                 .font(.system(size: 50.0))
         } currentValueLabel: {
             Text("\(currentSpeed.formatted(.number))")
-            
+                .font(.system(size: 200, weight: .bold, design: .rounded))
         }
         .gaugeStyle(SpeedometerGaugeStyle())
-        
     }
 }
 

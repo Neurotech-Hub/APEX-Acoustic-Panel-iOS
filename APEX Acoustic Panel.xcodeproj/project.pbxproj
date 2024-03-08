@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23084A702B9B533F005830CB /* BLEAppHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 23084A6F2B9B533F005830CB /* BLEAppHelpers */; };
+		23084A722B9B5370005830CB /* CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23084A712B9B5370005830CB /* CBUUID.swift */; };
 		23B3C0092B9B443A00A0BE3C /* APEX_Acoustic_PanelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B3C0082B9B443A00A0BE3C /* APEX_Acoustic_PanelApp.swift */; };
 		23B3C00B2B9B443A00A0BE3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B3C00A2B9B443A00A0BE3C /* ContentView.swift */; };
 		23B3C00D2B9B443D00A0BE3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23B3C00C2B9B443D00A0BE3C /* Assets.xcassets */; };
@@ -14,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23084A712B9B5370005830CB /* CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBUUID.swift; sourceTree = "<group>"; };
 		23B3C0052B9B443A00A0BE3C /* APEX Acoustic Panel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "APEX Acoustic Panel.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		23B3C0082B9B443A00A0BE3C /* APEX_Acoustic_PanelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APEX_Acoustic_PanelApp.swift; sourceTree = "<group>"; };
 		23B3C00A2B9B443A00A0BE3C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23084A702B9B533F005830CB /* BLEAppHelpers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +59,7 @@
 				23B3C00A2B9B443A00A0BE3C /* ContentView.swift */,
 				23B3C00C2B9B443D00A0BE3C /* Assets.xcassets */,
 				23B3C00E2B9B443D00A0BE3C /* Preview Content */,
+				23084A712B9B5370005830CB /* CBUUID.swift */,
 			);
 			path = "APEX Acoustic Panel";
 			sourceTree = "<group>";
@@ -83,6 +88,9 @@
 			dependencies = (
 			);
 			name = "APEX Acoustic Panel";
+			packageProductDependencies = (
+				23084A6F2B9B533F005830CB /* BLEAppHelpers */,
+			);
 			productName = "APEX Acoustic Panel";
 			productReference = 23B3C0052B9B443A00A0BE3C /* APEX Acoustic Panel.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +119,9 @@
 				Base,
 			);
 			mainGroup = 23B3BFFC2B9B443A00A0BE3C;
+			packageReferences = (
+				23084A6E2B9B533F005830CB /* XCLocalSwiftPackageReference "../BLEAppHelpers" */,
+			);
 			productRefGroup = 23B3C0062B9B443A00A0BE3C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23084A722B9B5370005830CB /* CBUUID.swift in Sources */,
 				23B3C00B2B9B443A00A0BE3C /* ContentView.swift in Sources */,
 				23B3C0092B9B443A00A0BE3C /* APEX_Acoustic_PanelApp.swift in Sources */,
 			);
@@ -275,6 +287,8 @@
 				DEVELOPMENT_TEAM = WBU4CZ6AZJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "APEX KILL";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need BLE";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,6 +318,8 @@
 				DEVELOPMENT_TEAM = WBU4CZ6AZJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "APEX KILL";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need BLE";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -344,6 +360,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		23084A6E2B9B533F005830CB /* XCLocalSwiftPackageReference "../BLEAppHelpers" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../BLEAppHelpers;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		23084A6F2B9B533F005830CB /* BLEAppHelpers */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BLEAppHelpers;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 23B3BFFD2B9B443A00A0BE3C /* Project object */;
 }
