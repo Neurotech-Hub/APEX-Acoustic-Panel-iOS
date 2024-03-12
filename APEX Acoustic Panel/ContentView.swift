@@ -110,7 +110,7 @@ struct ContentView: View {
                     Gauge(value: modemValues[2], in: -5...5) {
                         EmptyView()
                     } currentValueLabel: {
-                        Text(String(format: "%.1f", modemValues[1]))
+                        Text(String(format: "%.1f", modemValues[2]))
                     }
                     minimumValueLabel: {
                         Text("\(Int(minZValue))")
@@ -123,7 +123,7 @@ struct ContentView: View {
                     Gauge(value: modemValues[3], in: -5...5) {
                         EmptyView()
                     } currentValueLabel: {
-                        Text(String(format: "%.1f", modemValues[1]))
+                        Text(String(format: "%.1f", modemValues[3]))
                     }
                     minimumValueLabel: {
                         Text("\(Int(minZValue))")
@@ -136,7 +136,7 @@ struct ContentView: View {
                     Gauge(value: modemValues[4], in: -5...5) {
                         EmptyView()
                     } currentValueLabel: {
-                        Text(String(format: "%.1f", modemValues[1]))
+                        Text(String(format: "%.1f", modemValues[4]))
                     }
                     minimumValueLabel: {
                         Text("\(Int(minZValue))")
@@ -149,7 +149,7 @@ struct ContentView: View {
                     Gauge(value: modemValues[5], in: -5...5) {
                         EmptyView()
                     } currentValueLabel: {
-                        Text(String(format: "%.1f", modemValues[1]))
+                        Text(String(format: "%.1f", modemValues[5]))
                     }
                     minimumValueLabel: {
                         Text("\(Int(minZValue))")
@@ -201,7 +201,12 @@ struct ContentView: View {
     }
     
     func parseNode(from dataString: String) {
-        let values = dataString.split(separator: ",")
+        let values = dataString.split(separator: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        
+        guard values.count == 6 else {
+            return
+        }
+        
         for (index, value) in values.enumerated() {
             if let doubleValue = Double(value) {
                 if index < modemValues.count {
@@ -209,11 +214,11 @@ struct ContentView: View {
                 }
             }
         }
-
-        let modemValuesString = modemValues.map { String($0) }.joined(separator: ", ")
-        terminalManager.addMessage(modemValuesString)
         
-        let sum = modemValues[4] + modemValues[5]
+        let modemValuesString = modemValues.map { String($0) }.joined(separator: ", ")
+        print(modemValuesString)
+        
+        let sum = modemValues[4] + abs(modemValues[5])
         attackValue = sum * 20
         attackValue = max(0, min(attackValue, 100)) // Ensure attackValue is between 0 and 100
     }
